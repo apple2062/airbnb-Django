@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "/Users/iyeonju/.local/share/virtualenvs/airbnb-django-3sPB7mf9/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=91"
+    ]
+}
