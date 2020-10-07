@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from . import models
+from . import models  # 현재 같은 폴더 내에 있는 models 파일을 import 하겠다는 뜻.
 
 
 # Register your models here.

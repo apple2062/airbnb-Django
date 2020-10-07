@@ -39,10 +39,14 @@ DJANGO_APPS = [  # 기존 장고 INSTALLES_APPS에 이미 설치되어있던 앱
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = []  # 내가 아닌 다른 사람이 만든 application을 넣기 위함
+THIRD_PARTY_APPS = [  # 내가 아닌 다른 사람이 만든 applecion 을 넣어놓기 위함
+    "djaongo_countries",
+]
 
-PROJECT_APPS = [  # 내가 만든 APP인 user app 설치
+PROJECT_APPS = [  # 내가 만든 어플리케이션 설치
+    "core.apps.CoreConfig",
     "users.apps.UsersConfig",  # 이를 통해 장고가 User 인식함
+    "rooms.apps.RoomsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
