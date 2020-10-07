@@ -50,7 +50,7 @@ PROJECT_APPS = [  # 내가 만든 어플리케이션 설치
     "reviews.apps.ReviewsConfig",
     "reservations.apps.ReservationsConfig",
     "lists.apps.ListsConfig",
-    # "conversations.apps.ConversationsConfig",
+    "conversations.apps.ConversationsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
