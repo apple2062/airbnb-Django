@@ -47,6 +47,10 @@ PROJECT_APPS = [  # 내가 만든 어플리케이션 설치
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",  # 이를 통해 장고가 User 인식함
     "rooms.apps.RoomsConfig",
+    "reviews.apps.ReviewsConfig",
+    "reservations.apps.ReservationsConfig",
+    "lists.apps.ListsConfig",
+    "conversations.apps.ConversationsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
