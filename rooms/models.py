@@ -55,7 +55,7 @@ class Photo(
         models.ImageField()
     )  # room 은 photo 와 연결이 되어야 하므로 이를 연결시켜줌 (그리고 room 은 user 와 연결됨)
     room = models.ForeignKey(
-        "Room", on_delete=models.CASCADE
+        "Room", related_name="photos", on_delete=models.CASCADE
     )  # 사진을 지우면 room도 연결되어있기 떄문에 함께 지워져야 함
 
     def __str__(self):
@@ -81,13 +81,19 @@ class Room(core_models.TimeStampedModel):
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
         "users.User",
+        related_name="room",  # (= user가 어떻게 우리를 찾기를 원합니까?) room__set 대신 room 이라 쳐서 찾길 원해! >> 터미널에서, 변수.room.all()으로 검색할수 있게됨!
+        # 결국, "room" 이 set 이 된 것 이다!
         on_delete=models.CASCADE,  # host 필드가 user 과 연결이 되있는 결과를 확인할 수 있음!
-    )  # host 는 결국 user 인 셈이기 떄문에m, user 모델과 이 모델을 연결해서 쓰면 되는 것임. so, import user
+    )  # host 는 결국 user 인 셈이기 떄문에, user 모델과 이 모델을 연결해서 쓰면 되는 것임. so, import user
     # cascade 는 내가 user 을 삭제했을 때, room 도 삭제하고자 하기 위함이다.
-    room_type = models.ForeignKey("RoomType", on_delete=models.SET_NULL, null=True)
-    amenities = models.ManyToManyField("Amenity", blank=True)  # Manytomany 는 다대다 관계
-    facilities = models.ManyToManyField("Facility", blank=True)
-    house_rule = models.ManyToManyField("HouseRule", blank=True)
+    room_type = models.ForeignKey(
+        "RoomType", related_name="rooms", on_delete=models.SET_NULL, null=True
+    )
+    amenities = models.ManyToManyField(
+        "Amenity", related_name="rooms", blank=True
+    )  # Manytomany 는 다대다 관계
+    facilities = models.ManyToManyField("Facility", related_name="rooms", blank=True)
+    house_rule = models.ManyToManyField("HouseRule", related_name="rooms", blank=True)
 
     def __str__(self):
         return self.name

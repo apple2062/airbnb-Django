@@ -22,7 +22,7 @@ class Message(core_models.TimeStampedModel):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE
     )  # 우리가 user 을 없애면 message 도 없어져야 한다.
-    conversations = models.ForeignKey(
+    conversations = models.ForeignKey(  # message 는 conversation에도 보내져야 하므로 연결시켜주었음
         "Conversation", on_delete=models.CASCADE
     )  # 우리가 conversation 없애면 message 도 같이 없어져야한다.
 
