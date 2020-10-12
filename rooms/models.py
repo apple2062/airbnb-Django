@@ -51,8 +51,8 @@ class Photo(
     """Photo Model Definition"""
 
     caption = models.CharField(max_length=80)
-    file = (
-        models.ImageField()
+    file = models.ImageField(
+        upload_to="room-photos"  # upload_to? 장고야, uploads 폴더 안의 room-photos 폴더에 사진을 업로드 해줘!(폴더 없으면 너가 생성해!)
     )  # room 은 photo 와 연결이 되어야 하므로 이를 연결시켜줌 (그리고 room 은 user 와 연결됨)
     room = models.ForeignKey(
         "Room", related_name="photos", on_delete=models.CASCADE
@@ -97,3 +97,15 @@ class Room(core_models.TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def total_rating(self):  # room 에서 review 의 모든 리뷰들을 가져와서 평균을 얻기 위한 함수.
+        # 이 함수도 왜 admin에 안쓰고 model에 써준거냐? reviwq 패널 외의 다른 곳에도 그 평균 제공 기능이 존재하기때문
+        all_reviews = (
+            self.reviews.all()
+        )  # class Riview 가보면, room 을 가지고 있음. 그리고 그 룸은 related_name= "reviews"를가짐
+        # 그 말은, room 이 reviews 를 가진다는 것
+
+        all_ratings = 0
+        for review in all_reviews:
+            all_ratings += review.rating_average()
+        return all_ratings / len(all_reviews)

@@ -59,6 +59,7 @@ class RoomAdmin(admin.ModelAdmin):
         "count_amenities",  # 그냥 amenities를 쓰지 못하는 이유: 이 놈은 ManyToMany 필드 이기 때문에 한 놈만 display 할 수 없음. 따라서 새로운 함수를 만들어서 그에 따라 amaenity개수를 보여주고자 함.
         # 이 때, 새로운 함수는 admin functions 으로 같은 admin 안에서 생성할 수 있고, 내가 원하는 이름을 지으면 됨
         "count_photos",  # 얘도 마찬가지고 ManytoMany 필드이기 때문에, 새로운 함수를 만들어서 photo개수를 보여주고자 함.
+        "total_rating",
     )
 
     ordering = (

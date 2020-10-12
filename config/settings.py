@@ -15,6 +15,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 장고 documentation 에 따르면, MEDIA_ROOT는 절대 파일 경로를 가져야만 해. 그런게 고맙게도,
+# 우리는 이미 위와같은 절대 경로 패스를 가지고 있다.
+# print(BASE_DIR)를 찍어보면, /Users/iyeonju/document/airbnb-clone이라는 절대 경로를 나타내고 있다.
+# 따라서 이 경로에, 더하기 (내가 만들 폴더명) 을 join 해주면, 우리가 원하는 경로를 만들 수 있다!
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -136,3 +141,13 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 AUTH_USER_MODEL = "users.User"  # 디폴트 값이 아닌 우리가 만든 user app
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+# uploads 라는 폴더의 이름에 나의 모든 photos들을 넣어줄거임! , print(MEDIA_ROOT) >> /Users/iyeonju/documents/airbnb-clone/uploads
+
+MEDIA_URL = "/media/"  # (#8.4) media_url 에 뭘 쓰던 간에, 다루는 것은 media_root폴더(=uploads) 안의 파일들, + media+url 은 / 로 끝나냐한다(by documentation)
+# 이제 uploads 폴더로부터 무언가 가져오고 싶다면 /media/avatar-photos 형식으로 가야한다. 그래서 uploads 폴더명은 사라질 것이다.
+# media/avatar-photos/(아무거나) 이렇게 할 수 있고, 그래서 uploads 디렉토리를 MEDIA_URL 과 연결을 해야한다.
+# 이때, 위와같이 media/ 형태라면 이는 상대경로로서, 루트에서부터 시작하는 경로가 아니라는 것. root/media/ 가 되어야 절대 경로가 되는 것이다.
+# 따라서, "media/"가 아닌 "/media/" 로 지정함으로서, 루트에서부터 시작하는 media 경로 생성.(http://127.0.0.1:8000/media/room-photos/ooo.jpg 이렇게!)

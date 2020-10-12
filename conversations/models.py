@@ -5,12 +5,29 @@ from core import models as core_models
 class Conversation(core_models.TimeStampedModel):
     """Conversation Model Definition"""
 
-    participants = models.ManyToManyField("users.User", blank=True)
+    participants = models.ManyToManyField(
+        "users.User", related_name="conversations", blank=True
+    )
 
     def __str__(self):
-        return str(
-            self.created
-        )  # str 해주는 이유(에러가 났었다)-#5.3 ? 내가 conversation을 만들었는데 이게 나를 다시 list로 데려간 것이고 거기서 내 str 을 불렀는데 non-string이란 에러가 낫음.
+        usernames = []
+        for user in self.participants.all():
+            # 이게 모든 participants, 모든 users의 querySet을 줄 것임(쿼리셋이 모든 유저를 준다는 점이 핵심!)
+            usernames.append(user.username)
+        return " , ".join(usernames)
+
+    def count_messages(self):
+        return (
+            self.messages.count()
+        )  # message.count가 가능한 이유? >> 보다시피 conversation 내에는 masseage 를 가지고 있지 않음
+        # 그러나, message 클라스는 conversation을 FK를 messages 로 가지고있다. 때문에 이렇게 count 가 가능!
+
+    count_messages.short_description = "Number of Conversations"
+
+    def count_participants(self):
+        return self.participants.count()
+
+    count_participants.short_description = "Number of Participantss"
 
 
 class Message(core_models.TimeStampedModel):
@@ -20,10 +37,10 @@ class Message(core_models.TimeStampedModel):
     #  왜냐면 우린 그걸 conversation에서 할 것이기 때문
     # 그럼 누가 message 를 만드느냐? 바로 아래 user 이다.
     user = models.ForeignKey(
-        "users.User", on_delete=models.CASCADE
+        "users.User", related_name="messages", on_delete=models.CASCADE
     )  # 우리가 user 을 없애면 message 도 없어져야 한다.
     conversations = models.ForeignKey(  # message 는 conversation에도 보내져야 하므로 연결시켜주었음
-        "Conversation", on_delete=models.CASCADE
+        "Conversation", related_name="messages", on_delete=models.CASCADE
     )  # 우리가 conversation 없애면 message 도 같이 없어져야한다.
 
     def __str__(self):

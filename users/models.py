@@ -35,7 +35,9 @@ class User(AbstractUser):
         (CURRENCY_KR, "KRW"),
     )
 
-    photo = models.ImageField(blank=True)
+    photo = models.ImageField(
+        upload_to="avatar-photos", blank=True
+    )  # upload-to? 장고야,uploads 폴더 안의 avatar-photos라는 폴더에 업로드 해줘!(폴더가 없다면 너가 자동 생성해!)
     gender = models.CharField(
         choices=GENDER_CHOICES, max_length=10, blank=True
     )  # charfeild 는 내가 약간 변형가능(like choices)
