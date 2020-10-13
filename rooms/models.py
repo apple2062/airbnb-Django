@@ -81,7 +81,7 @@ class Room(core_models.TimeStampedModel):
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
         "users.User",
-        related_name="room",  # (= user가 어떻게 우리를 찾기를 원합니까?) room__set 대신 room 이라 쳐서 찾길 원해! >> 터미널에서, 변수.room.all()으로 검색할수 있게됨!
+        related_name="rooms",  # (= user가 어떻게 우리를 찾기를 원합니까?) room__set 대신 room 이라 쳐서 찾길 원해! >> 터미널에서, 변수.room.all()으로 검색할수 있게됨!
         # 결국, "room" 이 set 이 된 것 이다!
         on_delete=models.CASCADE,  # host 필드가 user 과 연결이 되있는 결과를 확인할 수 있음!
     )  # host 는 결국 user 인 셈이기 떄문에, user 모델과 이 모델을 연결해서 쓰면 되는 것임. so, import user
@@ -97,6 +97,10 @@ class Room(core_models.TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.city = str.capitalize(self.city)  # 사용자가 소문자로 입력시 첫 글자 대문자로 바꿔주기 위함
+        super().save()
 
     def total_rating(self):  # room 에서 review 의 모든 리뷰들을 가져와서 평균을 얻기 위한 함수.
         # 이 함수도 왜 admin에 안쓰고 model에 써준거냐? reviwq 패널 외의 다른 곳에도 그 평균 제공 기능이 존재하기때문

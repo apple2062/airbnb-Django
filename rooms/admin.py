@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
 from . import models
 
 
@@ -20,14 +21,23 @@ class ItemAdmin(admin.ModelAdmin):
         )  # amenities, facilities, roomtype, houserule class 확인시 related_name = "rooms"로 해놓았음
 
 
+class PhotoInline(admin.TabularInline):  # Rooms 안에 administration of photos 를 가지기 위한 작업
+    # InlineModelAdmin? > admin안에 또다른 admin을 넣는 방법(docs 참고!)
+    model = models.Photo
+
+
 @admin.register(models.Room)
 class RoomAdmin(admin.ModelAdmin):
     """Room Admin Definition"""
 
+    inlines = [
+        PhotoInline,  # 바로 윗 줄의 inline 인 PhotoInline을 RoomAdmin에 포함시켜주는 작업 (활용방법은 docs 참조 )
+    ]  # inline 포함 후, rooms 패널 가보면 장고가 자동으로 room 의 FK를 가지고 있는 이미지(PHOTOS) 를 집어 넣는다.
+
     fieldsets = (
         (
             "Basic Info",
-            {"fields": ("name", "description", "country", "address", "price")},
+            {"fields": ("name", "description", "country", "city", "address", "price")},
         ),
         (
             "Times",
@@ -78,6 +88,12 @@ class RoomAdmin(admin.ModelAdmin):
         "city",
         "country",
     )
+
+    raw_id_fields = (
+        "host",
+    )  # user가 엄~~청 많다면, host를 선택하는 작업에서 엄청나게 많은 이용자중에 찾아야 하는 무식함이 발생하기에,
+    # 많은 유저가 있을 것을 대비 , 이 raw_id 를 사용하여 필터(?) 작업을 해주는 것임
+
     search_fields = (
         "=city",
         "^host__username",  # host 는 room model 에 있고, host의 foreinkey 인 user 가 가진 username 을 검색. 그리고 search_field에선 . 아니고 __
@@ -88,6 +104,14 @@ class RoomAdmin(admin.ModelAdmin):
         "facilities",
         "house_rule",
     )
+
+    # model 에서는 save(), admin에서는 save_model()을 씀
+    def save_model(self, request, obj, form, change):
+        # obj.user = request.user
+        print(
+            obj, change, form
+        )  # obj = Yeonju room , change 는 바뀌었는지 아닌지 True or False 를 보여줌
+        super().save_model(request, obj, form, change)
 
     def count_amenities(
         self, obj
@@ -106,6 +130,15 @@ class RoomAdmin(admin.ModelAdmin):
 
 @admin.register(models.Photo)
 class PhotoAdmin(admin.ModelAdmin):
-    """ """
+    """Photo Admin Definition"""
 
-    pass
+    list_display = ("__str__", "get_thumbnail")
+
+    def get_thumbnail(
+        self, obj
+    ):  # 사용자에게 썸네일을 어드민 패널에서 보여주기 위함. 패널에서만 쓸 것이라 얜 model 아닌 admin 에 만들어주엇다.
+        return mark_safe(f'<img width="30px" src="{obj.file.url}" />')
+        # mark_safe? 내가 직접 html 을 만들어 쓰는 것을 시도하였더니, 장고가 access해주지 않아. 그것은 장고가 알 수없는 html로부터 hacked 되는 것을
+        # 막기 위해 일부러 액세스 안해주는 것. 때문에 나는 장고에게 이게 정말 안전하단 뜻으로 mark_safe utility를 import 해준 뒤, 그를 이렇게 활용한다
+
+    get_thumbnail.short_description = "Thumbnail"
