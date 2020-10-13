@@ -46,6 +46,7 @@ DJANGO_APPS = [  # 기존 장고 INSTALLES_APPS에 이미 설치되어있던 앱
 
 THIRD_PARTY_APPS = [  # 내가 아닌 다른 사람이 만든 applecion 을 넣어놓기 위함
     "djaongo_countries",
+    "django_seed",
 ]
 
 PROJECT_APPS = [  # 내가 만든 어플리케이션 설치
