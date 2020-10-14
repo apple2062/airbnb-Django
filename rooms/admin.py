@@ -47,7 +47,7 @@ class RoomAdmin(admin.ModelAdmin):
         (
             "More About the Space",
             {
-                "classes": ("collapse",),  # 패널을 접었다가 펼쳤다 할 수 있는 기능
+                # "classes": ("collapse",),  # 패널을 접었다가 펼쳤다 할 수 있는 기능
                 "fields": ("amenities", "facilities", "house_rule"),
             },
         ),
@@ -105,14 +105,6 @@ class RoomAdmin(admin.ModelAdmin):
         "house_rule",
     )
 
-    # model 에서는 save(), admin에서는 save_model()을 씀
-    def save_model(self, request, obj, form, change):
-        # obj.user = request.user
-        print(
-            obj, change, form
-        )  # obj = Yeonju room , change 는 바뀌었는지 아닌지 True or False 를 보여줌
-        super().save_model(request, obj, form, change)
-
     def count_amenities(
         self, obj
     ):  # self 는 adminclass 즉, 현재 포함되어 있는 RoomAdmin 이고 두번째 인자는 object 를 받는데 object 는 '현재 Room(class)' 이다.
@@ -126,6 +118,8 @@ class RoomAdmin(admin.ModelAdmin):
         return (
             obj.photos.count()
         )  # photos -> model 에서 class Photo가 related_name 으로 photos 를 갖고 있음
+
+    count_photos.short_description = "Photo Count"
 
 
 @admin.register(models.Photo)
