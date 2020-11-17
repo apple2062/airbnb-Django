@@ -133,7 +133,9 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False  # USE_TZ가 True일 때는 templates, forms에서의 datetime에만 내가 설정한 TIME_ZONE이 적용된다. 따라서 models의 datetime에는
+# 이 부분이 적용되지 않았기 때문에 원래의 default time zone인 'UTC' 값으로 계속 설정되었던 것이다.
+# 나는 models에서도 내가 설정한 TIME_ZONE 값을 적용하고 싶기 때문에 이 부분을 False로 바꾸어 주었다.
 
 
 # Static files (CSS, JavaScript, Images)

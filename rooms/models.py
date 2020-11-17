@@ -81,7 +81,7 @@ class Room(core_models.TimeStampedModel):
     instant_book = models.BooleanField(default=False)
     host = models.ForeignKey(
         "users.User",
-        related_name="rooms",  # (= user가 어떻게 우리를 찾기를 원합니까?) room__set 대신 room 이라 쳐서 찾길 원해! >> 터미널에서, 변수.room.all()으로 검색할수 있게됨!
+        related_name="rooms",  # (= user가 어떻게 우리를 찾기를 원합니까?) room__set 대신 rooms 이라 쳐서 찾길 원해! >> 터미널에서, 변수.room.all()으로 검색할수 있게됨!
         # 결국, "room" 이 set 이 된 것 이다!
         on_delete=models.CASCADE,  # host 필드가 user 과 연결이 되있는 결과를 확인할 수 있음!
     )  # host 는 결국 user 인 셈이기 떄문에, user 모델과 이 모델을 연결해서 쓰면 되는 것임. so, import user
@@ -113,5 +113,5 @@ class Room(core_models.TimeStampedModel):
         if len(all_reviews) > 0:
             for review in all_reviews:
                 all_ratings += review.rating_average()
-            return round(all_ratings / len(all_reviews), 2)
+            return round(all_ratings / len(all_reviews))
         return 0
