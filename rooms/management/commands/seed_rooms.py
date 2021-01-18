@@ -22,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         number = options.get("number")
         seeder = Seed.seeder()
-        # Field rooms.Room.host cannot be null 에러 때문에 추가함
+        # 말그대로 모든 유저를 디비에서 가져오는 것. Field rooms.Room.host cannot be null 에러 때문에 추가해주도록 한다
         all_users = user_models.User.objects.all()
 
         # django_seed.exceptions.SeederException: Field rooms.Room.room_type cannot be null 에러때문에 추가함
