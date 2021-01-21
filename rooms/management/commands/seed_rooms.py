@@ -43,6 +43,7 @@ class Command(BaseCommand):
             },
         )
         created_photos = seeder.execute()
+        # flatten ? 그냥 photos.values() 시 [[14]] 와 같은 2 arrays 형태의 값이 리턴되는데, 이를 일차원으로 받아햐하기에 한 차원 줄여주는 과정
         created_clean = flatten(
             list(created_photos.values())
         )  # created_photos의 이상한 모양?([[14]]<약간 이런식?) 을 정리해준다

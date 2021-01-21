@@ -37,7 +37,7 @@ class Command(BaseCommand):
             reservation_models.Reservation,
             number,
             {
-                # "status": lambda x: random.choice(["pending", "confirmed", "canceled"]),
+                "status": lambda x: random.choice(["pending", "confirmed", "canceled"]),
                 "guest": lambda x: random.choice(users),
                 "room": lambda x: random.choice(rooms_potato),
                 "check_in": lambda x: datetime.now(),

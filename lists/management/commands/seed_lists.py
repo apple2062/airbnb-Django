@@ -43,6 +43,6 @@ class Command(BaseCommand):
             # 랜덤한 방의 수 얻기
             to_add = rooms_potato[random.randint(0, 5) : random.randint(6, 30)]
 
-            # 왜 to_add 안하고 *to_add? >> 포인터개념으로, 그냥 to_add 하면 쿼리셋, array가 되기 때문에 나는 array 안에 있는 요소 "값" 을 원하므로 *to_add 라고 해주었다.
+            # 왜 to_add 안하고 *to_add? >> 포인터개념으로, 그냥 to_add 하면 쿼리셋,즉 array가 되기 때문에 나는 array 안에 있는 요소 "값" 을 원하므로 *to_add 라고 해주었다.
             list_model.rooms.add(*to_add)
         self.stdout.write(self.style.SUCCESS(f"{number} lists created!!"))

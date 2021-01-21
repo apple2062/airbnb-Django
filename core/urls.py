@@ -5,10 +5,11 @@
 아무것으로도 시작하지않는, 예를 들면 /home, /login, /logout 같은 것들은 바로 여기, core 로 가게 한다.
 장고안의 어플리케이션들은 기본으로 urls.py(in config) 로 오지 않는다. 만들어야됨..!
 """
+
 from django.urls import path
 from rooms import views as room_views
 
-app_name = "core"  # 지금 이 앱 네임인 core 와 config 안의 urls.py 의 namespace 랑 이름이 깉아야한다.
+app_name = "core"  # 이 "core" 와 config.urls 의 namespace 랑 이름이 깉아야한다.
 
 urlpatterns = [
     path(

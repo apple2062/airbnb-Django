@@ -1,0 +1,16 @@
+<!--base.html을 아웃라인으로 사용하기 위해서는 이 파일에 base를 확장시켜주어야 한다.아래와 같이 선언해준다-->
+{% extends 'base.html' %}
+
+
+{% block page_name %}
+Home
+{% endblock page_name %}
+
+
+{% block content %}
+
+{% for room in rooms  %}
+<h1>{{room.name}} / ${{room.price}} </h1>
+{% endfor %}
+
+{% endblock content %}
