@@ -8,7 +8,6 @@ Home
 
 
 {% block content %}
-
 {% for room in rooms  %}
 <h1>{{room.name}} / ${{room.price}} </h1>
 {% endfor %}
@@ -26,6 +25,5 @@ Home
     {% endif %}
 
 </h5>
-
 <!-- for 문안에 range()를 바로 작성하는 것은 지원하지 않으므로 , view.py 안의 context 에 변수로서 전달하여 사용 해야 한다.-->
 {% endblock content %}

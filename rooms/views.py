@@ -34,4 +34,4 @@ def all_rooms(request):
     )  # context 에 지정한 변수명과 변수를 담아 해당 template으로 전달
     # template 에서는 받을 변수를 {{}} 안에 호출시킨다.
 
-    # return HttpResponse(content = "hello~")
+    # return HttpResponse(content = "hi~")
