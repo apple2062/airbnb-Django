@@ -13,4 +13,19 @@ Home
 <h1>{{room.name}} / ${{room.price}} </h1>
 {% endfor %}
 
+<h5>
+    <!-- page+1 로 바로 쓰지 못한다. django tag 중 filter tag 안의 add 를 활용한다. -->
+    {% if page_num is not 1%}
+    <a href="?page={{page_num|add:-1}}"> Previous </a>
+    {% endif %}
+
+    Page {{page_num}} of {{page_count}}
+
+    {% if not page_num == page_count %}
+    <a href="?page={{page_num|add:1}} "> Next </a>"
+    {% endif %}
+
+</h5>
+
+<!-- for 문안에 range()를 바로 작성하는 것은 지원하지 않으므로 , view.py 안의 context 에 변수로서 전달하여 사용 해야 한다.-->
 {% endblock content %}
