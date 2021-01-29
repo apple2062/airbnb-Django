@@ -17,13 +17,13 @@ Home
     <!-- page+1 로 바로 쓰지 못한다. django tag 중 filter tag 안의 add 를 활용한다. -->
     {% if rooms.has_previous %}
     <!--rooms 는 views.py 내의 rooms라 선언한 paginator에서 온 페이지임.-->
-    <a href="?page={{rooms.number|add:-1}}"> Previous </a>
+    <a href="?page={{rooms.previous_page}}"> Previous </a>
     {% endif %}
 
     Page {{rooms.number}} of {{rooms.paginator.num_pages}}
 
     {% if rooms.has_next %}
-    <a href="?page={{rooms.number|add:1}} "> Next </a>"
+    <a href="?page={{rooms.next_page_number}} "> Next </a>"
     {% endif %}
 
 </h5>
