@@ -8,22 +8,23 @@ Home
 
 
 {% block content %}
-{% for room in rooms.object_list  %}
-<!--object_list 가 paginator 안에 내제되어 바로 사용이 가능-->
+{% for room in rooms  %}
+<!--위 rooms는 views.py 내의 context_object_name = "rooms" 로 인해 object_list라고 칭하는 대신 rooms로 불러 오는 것임-->
+<!--ListView 가 실행되는 동안 self.object_list는 objects의 목록을 포함하고 있으므로, 우리가 바로 액세스 가능하다. (11.7)-->
 <h1>{{room.name}} / ${{room.price}} </h1>
 {% endfor %}
 
 <h5>
     <!-- page+1 로 바로 쓰지 못한다. django tag 중 filter tag 안의 add 를 활용한다. -->
-    {% if rooms.has_previous %}
+    {% if page_obj.has_previous %}
     <!--rooms 는 views.py 내의 rooms라 선언한 paginator에서 온 페이지임.-->
-    <a href="?page={{rooms.previous_page}}"> Previous </a>
+    <a href="?page={{page_obj.previous_page}}"> Previous </a>
     {% endif %}
 
-    Page {{rooms.number}} of {{rooms.paginator.num_pages}}
+    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
 
-    {% if rooms.has_next %}
-    <a href="?page={{rooms.next_page_number}} "> Next </a>"
+    {% if page_obj.has_next %}
+    <a href="?page={{page_obj.next_page_number}} "> Next </a>"
     {% endif %}
 
 </h5>

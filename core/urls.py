@@ -12,7 +12,7 @@ from rooms import views as room_views
 app_name = "core"  # 이 "core" 와 config.urls 의 namespace 랑 이름이 깉아야한다.
 
 urlpatterns = [
-    path(
-        "", room_views.all_rooms, name="home"  # view 에 home 이라는 이름을 주었음
+    path(  # as_view 메소드 ? HomeView자체는 class 이므로 path는 오로지 url 혹은 함수만을 갖기 때문에 이 메소드를 통해 class 를 view로 변경해준다.
+        "", room_views.HomeView.as_view(), name="home"  # view 에 home 이라는 이름을 주었음
     ),  # 이렇게 하고, urls.py(in config) 가서 path를 include 해주는 작업만 해주면 된다.
 ]
