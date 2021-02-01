@@ -1,5 +1,6 @@
 # RoomView 로 우린 Listview class 가 필요하기에 이를 import 해준다.
 from django.views.generic import ListView
+from django.http import Http404
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from . import models
@@ -23,5 +24,6 @@ def room_detail(request, pk):  # urls 에서 내가 선언한 pk 변수를 인�
         room = models.Room.objects.get(pk=pk)
         return render(request, "rooms/detail.html", {"room": room})
     except models.Room.DoesNotExist:
-        return redirect(reverse("core:home"))  # core:home url을 받아서 redirect 해줄 것임
+        # return redirect(reverse("core:home"))  # core:home url을 받아서 redirect 해줄 것임
         # reverse를 url 대신 쓸 수 있도록 연습하자! 엄청 도움이 된다고 한다
+        raise Http404()
