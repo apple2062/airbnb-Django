@@ -8,6 +8,6 @@ app_name = "rooms"
 
 urlpatterns = [
     path(  # 이 path도 선언 후 config 안의 url파일 내에 import 해주어야만 한다.
-        "<int:pk>", views.RoomDetail, name="detail"
+        "<int:pk>", views.RoomDetail.as_view(), name="detail"
     )
 ]
