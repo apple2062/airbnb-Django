@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView
 
 # from django.http import Http404
 # from django.urls import reverse
-# from django.shortcuts import render, redirect
+ from django.shortcuts import render, redirect
 from . import models
 
 # 11.6 까지 했던 모든 paginator 와 try-except 로 예외 처리했던 모든 부분을 지우고 아래와같이 Homeview라 선언한 class based view로 다시 시작해보자.
@@ -36,3 +36,6 @@ def room_detail(request, pk):  # urls 에서 내가 선언한 pk 변수를 인�
         # reverse를 url 대신 쓸 수 있도록 연습하자! 엄청 도움이 된다고 한다
         raise Http404()
 """
+
+def search(request):
+    return render(request, "")
