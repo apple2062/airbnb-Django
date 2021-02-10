@@ -5,15 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        {% block page_name %}
+        {% block page_title %}
 
-        {% endblock page_name %} | YJbnb
+        {% endblock page_title %} | YJbnb
     </title>
 </head>
 
 <body>
+    <header>
+        {% include "partials/navigation.html" %}
 
-    {% include "partials/header.html" %}
+        {% block search_bar %}
+        <form method="get" action="{% url "rooms:search" %}">
+            <!-- 아래 input에서 name = "blah" 로 꼭 해주어야, url argument에 /blah="aaa" 라고 뜨는것임 -->
+            <input name="city" placeholder="Search by City " />
+        </form>
+        {% endblock search_bar %}
+    </header>
 
     {% block content %}
 

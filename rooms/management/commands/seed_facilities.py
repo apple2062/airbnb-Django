@@ -17,9 +17,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         facilities = [
+            "Private entrance",
             "Free parking on premises",
+            "Paid parking on premises",
+            "Parking",
+            "Elavator",
             "Gym",
-            "Hot tub",
             "Pool",
         ]
         for f in facilities:
