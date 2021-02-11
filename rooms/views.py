@@ -51,8 +51,8 @@ def search(request):
     bedrooms = int(request.GET.get("bedrooms", 0))
     beds = int(request.GET.get("beds", 0))
     baths = int(request.GET.get("baths", 0))
-    instant = request.GET.get("instant", False)
-    super_host = request.GET.get("super_host", False)
+    instant = bool(request.GET.get("instant", False))
+    superhost = bool(request.GET.get("superhost", False))
 
     # 아래 두 변수는 사용자가 선택한 체크 박스 목록들 전부를 list에 담아 반환하기 위함.(결과는 터미널에서 확인가능)
     selected_amenities = request.GET.getlist("amenities")
@@ -70,7 +70,7 @@ def search(request):
         "beds": beds,
         "baths": baths,
         "instant": instant,
-        "super_host": super_host,
+        "superhost": superhost,
         "selected_amenities": selected_amenities,
         "selected_facilities": selected_facilities,
     }
@@ -85,6 +85,53 @@ def search(request):
         "amenities": amenities,
         "facilities": facilities,
     }
+
+    filter_args = {}
+    # city__startswith 의 city 는 models.py 안에서 내가 선언한 변수명을 똑같이 쓴 것. 아래의 조건부도 동일한 방법으로 써야함.
+    if city != "Any":
+        filter_args["city__startswith"] = city
+
+    # country 는 default 를 KR 로 해놓았기 때문에, 조건부를 설정할 필요가 없이 그냥 fileter_args에 집어넣어주면 됨.
+    filter_args["country"] = country
+
+    if room_type != 0:
+        filter_args["room_type__pk"] = room_type
+
+    if price != 0:
+        filter_args["price__lte"] = price  # price 는 사용자 입장에서 하루 최대 숙박비이므로 __lte 를 활용
+
+    if guests != 0:
+        filter_args[
+            "guests__gte"
+        ] = guests  # geust 같은 경우는 가장 최소 인원으로 선택하게 되니깐 __gte 를 활용
+
+    if bedrooms != 0:
+        filter_args["bedrooms__lte"] = bedrooms
+
+    if beds != 0:
+        filter_args["beds__lte"] = beds
+
+    if baths != 0:
+        filter_args["baths__lte"] = baths
+
+    # instant_book 은 models.py에서 선언했던 변수명으로서 가져온 것임
+    if instant is not True:
+        filter_args["instant_book"] = True  # False 인건 신경 안써도 되니까 그냥 조건부없이 True 해줌
+
+    # super_host 는 models.py 안에 있지 않아. 그러나 FK 를 이용해서 필터링이 가능하다 !!!
+    if sup erhost is not True:
+        # host 는 models.py를 보면, host 의 FK가 user이고 user 내부모델에 superhost 가 있으므로 이런식으로 필터링을 한다는 것임
+        filter_args["host__superhost"] = True
+
+    if len(selected_amenities) > 0:
+        for selected_amenity in selected_amenities:
+            filter_args["amenities__pk"] = int(selected_amenity)
+
+    if len(selected_facilities) > 0:
+        for selected_facility in selected_facilities:
+            filter_args["facilities__pk"] = int(selected_facility)
+
+    rooms = models.Room.objects.filter(**filter_args)
 
     return render(
         request,
