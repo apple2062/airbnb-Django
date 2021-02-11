@@ -1,5 +1,5 @@
 # RoomView 로 우린 Listview class 가 필요하기에 이를 import 해준다.
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 
 # from django.http import Http404
 # from django.urls import reverse
@@ -39,78 +39,82 @@ def room_detail(request, pk):  # urls 에서 내가 선언한 pk 변수를 인�
 """
 
 
-def search(request):
+class SearchView(View):
+    """ SearchView Dafinition"""
 
-    form = forms.SearchForm(request.GET)
+    def get(self, request):
+        country = request.GET.get("country")
+        if country:
+            form = forms.SearchForm(request.GET)
+            if form.is_valid():
+                print(form.cleaned_data)
+                city = form.cleaned_data.get("city")
+                country = form.cleaned_data.get("country")
+                price = form.cleaned_data.get("price")
+                room_type = form.cleaned_data.get("room_type")
+                price = form.cleaned_data.get("price")
+                guests = form.cleaned_data.get("guests")
+                bedrooms = form.cleaned_data.get("bedrooms")
+                beds = form.cleaned_data.get("beds")
+                baths = form.cleaned_data.get("baths")
+                instant_book = form.cleaned_data.get("instant_book")
+                superhost = form.cleaned_data.get("superhost")
+                amenities = form.cleaned_data.get("amenities")
+                facilities = form.cleaned_data.get("facilities")
 
-    if form.is_valid():
+                filter_args = {}
+                # city__startswith 의 city 는 models.py 안에서 내가 선언한 변수명을 똑같이 쓴 것. 아래의 조건부도 동일한 방법으로 써야함.
+                if city != "Any":
+                    filter_args["city__startswith"] = city
 
-        city = form.cleaned_data.get("city")
-        country = form.cleaned_data.get("country")
-        price = form.cleaned_data.get("price")
-        room_type = form.cleaned_data.get("room_type")
-        price = form.cleaned_data.get("price")
-        guests = form.cleaned_data.get("guests")
-        bedrooms = form.cleaned_data.get("bedrooms")
-        beds = form.cleaned_data.get("beds")
-        baths = form.cleaned_data.get("baths")
-        instant_book = form.cleaned_data.get("instant_book")
-        superhost = form.cleaned_data.get("superhost")
-        amenities = form.cleaned_data.get("amenities")
-        facilities = form.cleaned_data.get("facilities")
+                # country 는 default 를 KR 로 해놓았기 때문에, 조건부를 설정할 필요가 없이 그냥 fileter_args에 집어넣어주면 됨.
+                filter_args["country"] = country
 
-        filter_args = {}
-        # city__startswith 의 city 는 models.py 안에서 내가 선언한 변수명을 똑같이 쓴 것. 아래의 조건부도 동일한 방법으로 써야함.
-        if city != "Any":
-            filter_args["city__startswith"] = city
+                if room_type is not None:
+                    filter_args["room_type"] = room_type
 
-        # country 는 default 를 KR 로 해놓았기 때문에, 조건부를 설정할 필요가 없이 그냥 fileter_args에 집어넣어주면 됨.
-        filter_args["country"] = country
+                if price is not None:
+                    filter_args[
+                        "price__lte"
+                    ] = price  # price 는 사용자 입장에서 하루 최대 숙박비이므로 __lte 를 활용
 
-        if room_type is not None:
-            filter_args["room_type"] = room_type
+                if guests is not None:
+                    filter_args[
+                        "guests__gte"
+                    ] = guests  # geust 같은 경우는 가장 최소 인원으로 선택하게 되니깐 __gte 를 활용
 
-        if price is not None:
-            filter_args[
-                "price__lte"
-            ] = price  # price 는 사용자 입장에서 하루 최대 숙박비이므로 __lte 를 활용
+                if bedrooms is not None:
+                    filter_args["bedrooms__lte"] = bedrooms
 
-        if guests is not None:
-            filter_args[
-                "guests__gte"
-            ] = guests  # geust 같은 경우는 가장 최소 인원으로 선택하게 되니깐 __gte 를 활용
+                if beds is not None:
+                    filter_args["beds__lte"] = beds
 
-        if bedrooms is not None:
-            filter_args["bedrooms__lte"] = bedrooms
+                if baths is not None:
+                    filter_args["baths__lte"] = baths
 
-        if beds is not None:
-            filter_args["beds__lte"] = beds
+                # instant_book 은 models.py에서 선언했던 변수명으로서 가져온 것임
+                if instant_book is not True:
+                    filter_args[
+                        "instant_book"
+                    ] = True  # False 인건 신경 안써도 되니까 그냥 조건부없이 True 해줌
 
-        if baths is not None:
-            filter_args["baths__lte"] = baths
+                # super_host 는 models.py 안에 있지 않아. 그러나 FK 를 이용해서 필터링이 가능하다 !!!
+                if superhost is not True:
+                    # host 는 models.py를 보면, host 의 FK가 user이고 user 내부모델에 superhost 가 있으므로 이런식으로 필터링을 한다는 것임
+                    filter_args["host__superhost"] = True
 
-        # instant_book 은 models.py에서 선언했던 변수명으로서 가져온 것임
-        if instant_book is not True:
-            filter_args["instant_book"] = True  # False 인건 신경 안써도 되니까 그냥 조건부없이 True 해줌
+                for amenity in amenities:
+                    filter_args["amenities"] = amenity
 
-        # super_host 는 models.py 안에 있지 않아. 그러나 FK 를 이용해서 필터링이 가능하다 !!!
-        if superhost is not True:
-            # host 는 models.py를 보면, host 의 FK가 user이고 user 내부모델에 superhost 가 있으므로 이런식으로 필터링을 한다는 것임
-            filter_args["host__superhost"] = True
+                for facility in facilities:
+                    filter_args["facilities"] = facility
 
-        for amenity in amenities:
-            filter_args["amenities"] = amenity
+                rooms = models.Room.objects.filter(**filter_args)
+        else:
+            form = forms.SearchForm()
 
-        for facility in facilities:
-            filter_args["facilities"] = facility
-
-        rooms = models.Room.objects.filter(**filter_args)
-
-    else:
-        form = forms.SearchForm()
-
-    return render(
-        request,
-        "rooms/search.html",
-        {"form": form, "rooms": rooms},
-    )
+        return render(
+            request,
+            "rooms/search.html",
+            {"form": form},
+        )
