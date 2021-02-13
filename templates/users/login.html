@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+Login
+{% endblock page_title %}
+
+
+{% block search_bar %}
+
+{% endblock search_bar %}
+
+
+{% block content %}
+<form method="POST" action="{% url "users:login" %}">
+    <!-- csrf 와 csft_token 에 관한 내용은 #14.1 노트 참고하자 -->
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Login</button>
+</form>
+
+{% endblock content %}

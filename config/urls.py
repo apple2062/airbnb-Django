@@ -29,6 +29,7 @@ urlpatterns = [
         "", include("core.urls", namespace="core")
     ),  # what include?  urls.py(in core)에 작성한 urlpatterns를 url.config에 넣어주기 위해 필요
     path("rooms/", include("rooms.urls", namespace="rooms")),
+    path("users/", include("users.urls", namespace="users")),
     path("admin/", admin.site.urls),
 ]
 
