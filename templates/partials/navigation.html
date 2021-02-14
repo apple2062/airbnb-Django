@@ -1,4 +1,16 @@
 <a href="{% url "core:home" %}">YeonJubnb</a>
 <ul>
-    <li><a href="{% url "users:login" %}">Login</a></li>
+    <!-- is_authenticated ? user 가 이미 인증되어있는지 확인. (#14.4))
+        그런데 여기서 , 궁금증이 생김. user는 어디서 나타났고 어떻게 이 navigation 파일이 user 에 access 할 수 있을까?
+        장고는 Context Processor 함수 라는걸 가지고 있음. (#14.4) 이건 나의 template 에 정보를 추가하는 일을 하는데, 어디서든 그 template 으로 접근할 수 있다.
+        (그 뷰의 Context 가 아닌 어디서든 접근 할 수 있음.) 아래 같은 경우에서는 ,
+        Context Processor 가 쿠키를 가져와서 user을 찾고, 그걸 template 에 자동으로 넣어주는 것임.
+    -->
+    {% if user.is_authenticated  %}
+    <li><a href="{% url "users:logout" %}">Log out </a></li>
+    {% else %}
+    <li><a href="{% url "users:login" %}">Login </a></li>
+    {% endif %}
+
+
 </ul>
