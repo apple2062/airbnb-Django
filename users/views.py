@@ -43,5 +43,11 @@ class SignUpView(FormView):
 
     def form_valid(self, form):
         form.save()
-        # forms.py 내의 ModelForm (in SignupForm) 이 save 기능을 갖고 있기 때문에 이전 코드 삭제.
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+
+        user.send_verification_email()
         return super().form_valid(form)

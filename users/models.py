@@ -53,3 +53,12 @@ class User(AbstractUser):
         choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_KR
     )
     superhost = models.BooleanField(default=False)
+
+    email_confirmed = models.BooleanField(default=False)
+    # email_secret 의 용도 ?
+    # email, password 를 이용해서 user 가 새 계정 생성시 , 이 곳에 아무 숫자나 넣을 것임.
+    # 이 랜덤으로 생성한 숫자를 링크를 통해서 이메일로 보내면 user가 그 링크 클릭 했을 때, 어떤 /verify/(랜덤숫자) 링크로 가게 하기 위함. 이 랜덤 숫자를 받을 수 있는 view 를 만들어서 email_secret 값에 이 숫자가 포함된 user을 찾도록 할 것이다.
+    email_secret = models.CharField(max_length=120, default="", blank=True)
+
+    def send_verification_email(self):
+        pass
