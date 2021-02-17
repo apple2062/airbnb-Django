@@ -46,6 +46,10 @@ class User(AbstractUser):
     )  # charfeild 는 내가 약간 변형가능(like choices)
     bio = models.TextField(blank=True)
     birthday = models.DateField(blank=True, null=True)
-    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, blank=True)
-    currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, blank=True)
+    language = models.CharField(
+        choices=LANGUAGE_CHOICES, max_length=2, blank=True, default=LANGUAGE_KOREAN
+    )
+    currency = models.CharField(
+        choices=CURRENCY_CHOICES, max_length=3, blank=True, default=CURRENCY_KR
+    )
     superhost = models.BooleanField(default=False)

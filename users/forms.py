@@ -22,20 +22,16 @@ class LoginForm(forms.Form):
             self.add_error("email", forms.ValidationError("User Does not exist"))
 
 
-class SignUpForm(forms.Form):
-    first_name = forms.CharField(max_length=80)
-    last_name = forms.CharField(max_length=80)
-    email = forms.EmailField()
+# ModelForm 자체에 clean, save 메소드가 존재함 !!!! 때문에 email field, clean_email 이 필요 없다. 알아서 해준다 . + unique 한 field 값을 validate 할 수도 있음
+class SignUpForm(forms.ModelForm):
+    # ModelForm 틀에 관한 것 (#15.2)
+    class Meta:
+        model = models.User
+        # 아래 fields 안에 선언하는 필드가 알아서 html 에 form 형태로 뜸
+        fields = ("first_name", "last_name", "email")
+
     password = forms.CharField(widget=forms.PasswordInput)
     password1 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        try:
-            models.User.objects.get(email=email)
-            raise forms.ValidationError("User already exists with that email")
-        except models.User.DoesNotExist:
-            return email
 
     def clean_password1(self):
         password = self.cleaned_data.get("password")
@@ -46,14 +42,12 @@ class SignUpForm(forms.Form):
         else:
             return password
 
-    def save(self):
-        first_name = self.cleaned_data.get("first_name")
-        last_name = self.cleaned_data.get("last_name")
+    # ModelForm 에서 이미 갖고 있는 save 메소드에다가 override 하기 (username을 email로)
+    def save(self, *args, **kwargs):
+        # commit=False?  Django object 는 생성되지만 그 object이 데이터베이스에 올라가지는 않게 하기 위한 옵션. 즉 , user은 만들지만 save는 하지마!
+        user = super().save(commit=False)
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
-
-        # create_user(username,email,password) 메소드의 필수 인자 세개..! 나는 username==email할거기때문에 아래와같이 작성
-        user = models.User.objects.create_user(email, email, password)
-        user.first_name = first_name
-        user.last_name = last_name
+        user.username = email  # user 의 username 값이 email이 되도록 해주었다
+        user.set_password(password)  # 사용자 비밀번호를 암호화해서 저장하는 메소드
         user.save()
