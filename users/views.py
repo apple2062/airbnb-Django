@@ -24,26 +24,28 @@ class LoginView(FormView):
         # super().form_valid() 호출될때, success_url 로 가고 다 다시 작동되게 됨
         return super().form_valid(form)
 
-    """
-    def get(self, request):
-        form = forms.LoginForm(initial={"email": "yeonju@lee.com"})
-        return render(request, "users/login.html", {"form": form})
-
-    def post(self, request):
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get("email")
-            password = form.cleaned_data.get("password")
-            # 로그인 하기 위한 두가지 방법 : 인증 과 로그인. (#14.4)
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect(reverse("core:home"))
-        return render(request, "users/login.html", {"form": form})
-    """
-
 
 def log_out(request):
     # 아래 logout은 위에서 import logout 해준 것임
     logout(request)
     return redirect(reverse("core:home"))
+
+
+class SignUpView(FormView):
+    template_name = "users/signup.html"
+    form_class = forms.SignUpForm
+    success_url = reverse_lazy("core:home")
+    initial = {
+        "first_name": "lee",
+        "last_name": "yeonju",
+        "email": "yamjuzzang@gmail.com",
+    }
+
+    def form_valid(self, form):
+        form.save()
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+        return super().form_valid(form)
