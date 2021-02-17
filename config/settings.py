@@ -154,3 +154,9 @@ MEDIA_URL = "/media/"  # (#8.4) media_url 에 뭘 쓰던 간에, 다루는 것�
 # media/avatar-photos/(아무거나) 이렇게 할 수 있고, 그래서 uploads 디렉토리를 MEDIA_URL 과 연결을 해야한다.
 # 이때, 위와같이 media/ 형태라면 이는 상대경로로서, 루트에서부터 시작하는 경로가 아니라는 것. root/media/ 가 되어야 절대 경로가 되는 것이다.
 # 따라서, "media/"가 아닌 "/media/" 로 지정함으로서, 루트에서부터 시작하는 media 경로 생성.(http://127.0.0.1:8000/media/room-photos/ooo.jpg 이렇게!)
+
+# Email Configuration
+EMAIL_HOST = "smtp.mailgun.org"
+EMAIL_PORT = "587"
+EMAIL_USER = 
+EMAIL_HOST_PASSWORD = 
