@@ -158,5 +158,5 @@ MEDIA_URL = "/media/"  # (#8.4) media_url 에 뭘 쓰던 간에, 다루는 것�
 # Email Configuration
 EMAIL_HOST = "smtp.mailgun.org"
 EMAIL_PORT = "587"
-EMAIL_USER = 
-EMAIL_HOST_PASSWORD = 
+EMAIL_USER = os.environ.get("MAILGUN_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")

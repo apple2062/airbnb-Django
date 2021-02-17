@@ -106,7 +106,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env 을 gitignore 에 넣어주면 개인정보 보호 가능해진것임. 원래 들어가 있었넹 ㅎ
+.env 
 .venv
 env/
 venv/
