@@ -1,9 +1,13 @@
-# from django.db import models  # 우리한테 필요없는 모델
+import uuid  # random 한 string 을 뽑아내기 위한 lib
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser  # 우리가 쓸 모델
 from django.db import models
 
 # (#8.6)의 rooms를 useradmin 안에 Inline 해보라는 과제 때문에 import 시켜준 room model이다.
 from rooms import models as room_models
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string  # template 을 load 해서 render 해줌
 
 # 장고 user을 내가 만든 user 대치하기 -> 이때, 가장 먼저 할일 : User 어플리케이션을 setting.py 에서 설치해야함
 class User(AbstractUser):
@@ -54,11 +58,26 @@ class User(AbstractUser):
     )
     superhost = models.BooleanField(default=False)
 
-    email_confirmed = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False)
     # email_secret 의 용도 ?
     # email, password 를 이용해서 user 가 새 계정 생성시 , 이 곳에 아무 숫자나 넣을 것임.
     # 이 랜덤으로 생성한 숫자를 링크를 통해서 이메일로 보내면 user가 그 링크 클릭 했을 때, 어떤 /verify/(랜덤숫자) 링크로 가게 하기 위함. 이 랜덤 숫자를 받을 수 있는 view 를 만들어서 email_secret 값에 이 숫자가 포함된 user을 찾도록 할 것이다.
     email_secret = models.CharField(max_length=120, default="", blank=True)
 
     def send_verification_email(self):
-        pass
+        if self.email_verified is False:
+            secret = uuid.uuid4().hex[:20]
+            self.email_secret = secret
+            html_message = render_to_string(
+                "emails/verify_email.html", {"secret": secret}
+            )
+            send_mail(
+                "Verify Airbnb Account",
+                # strip_tags? html을 html형태를 제외한 상태로 return (태그이름들을 제거해주는 식)
+                strip_tags(html_message),
+                settings.EMAIL_FROM,  # 이거 위해서 import setting 해주었음
+                [self.email],
+                fail_silently=False,
+                html_message=html_message,
+            )
+        return
