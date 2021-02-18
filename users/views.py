@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
-from . import forms
+from . import forms, models
 
 
 class LoginView(FormView):
@@ -50,3 +50,16 @@ class SignUpView(FormView):
             login(self.request, user)
         user.send_verification_email()
         return super().form_valid(form)
+
+
+# 인자의 key 는 내가 models 내에서 선언했던 secret 이 될것임
+def complete_verification(request, key):
+    try:
+        user = models.User.objects.get(email_secret=key)
+        user.email_verified = True
+        # verified 된 게 확인되면 아래와 같이 secret 키는 지워주도록함
+        # user.email_secret = ""
+        user.save()
+    except models.User.DoesNotExist:
+        pass
+    return redirect(reverse("core:home"))
